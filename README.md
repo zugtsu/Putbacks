@@ -7,6 +7,21 @@ to deal with by hand.
 > Independent side project. Not affiliated with or endorsed by Kroger or any of its stores.
 > Product data comes from Kroger's public developer API using your own keys.
 
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/scan.png" width="230" alt="Scanning a cart"><br><sub>Scan the cart</sub></td>
+    <td align="center"><img src="docs/screenshots/not-your-problem.png" width="230" alt="Out-of-department warning"><br><sub>Not your department</sub></td>
+    <td align="center"><img src="docs/screenshots/route.png" width="230" alt="Sorted route"><br><sub>Walk the route</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/tag.png" width="230" alt="Tagging an item's spot"><br><sub>Tag a spot once</sub></td>
+    <td align="center"><img src="docs/screenshots/find.png" width="230" alt="Search by name"><br><sub>Search by name</sub></td>
+    <td align="center"><img src="docs/screenshots/setup.png" width="230" alt="Kroger setup"><br><sub>Add your own keys</sub></td>
+  </tr>
+</table>
+
 ## What it does
 
 - **Batch scanning.** Point the camera at each barcode (or snap a photo, or type it). Items stack up
