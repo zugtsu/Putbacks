@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Putback">
+  <meta name="theme-color" content="#534AB7">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <title>Putback</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <main>
+    <!-- Scan -->
+    <section id="view-scan" class="view">
+      <header class="head">
+        <div>
+          <h1>Your cart</h1>
+          <p class="sub" id="cart-sub">Scan your go-backs</p>
+        </div>
+        <span class="status" id="status" hidden>Offline</span>
+      </header>
+
+      <div class="camera" id="camera">
+        <video id="video" autoplay playsinline muted></video>
+        <div class="frame"></div>
+        <button class="cam-start" id="cam-start">Start camera</button>
+        <p class="cam-msg" id="cam-msg"></p>
+      </div>
+
+      <label class="snap" for="snap-input">Won't scan? Snap a photo of the barcode</label>
+      <input id="snap-input" type="file" accept="image/*" capture="environment" hidden>
+
+      <form class="manual" id="manual" autocomplete="off">
+        <input id="manual-code" inputmode="numeric" placeholder="Or type a barcode" aria-label="Barcode">
+        <button type="submit" class="pill-btn">Add</button>
+      </form>
+
+      <button class="banner setup" id="setup-nudge" type="button" hidden>Connect Kroger to get names, photos and aisles. Set it up</button>
+      <p class="banner" id="no-spot" role="alert" hidden></p>
+      <ul class="list" id="cart-list"></ul>
+
+      <div class="cart-actions" id="cart-actions" hidden>
+        <button class="go" id="go-route">Let's go</button>
+        <button class="link" id="clear-cart">Clear cart</button>
+      </div>
+    </section>
+
+    <!-- Find -->
+    <section id="view-find" class="view" hidden>
+      <header class="head">
+        <div>
+          <h1>Find it</h1>
+          <p class="sub" id="find-sub">Search your store by name</p>
+        </div>
+      </header>
+      <form id="find-form" autocomplete="off">
+        <input id="find-q" class="search" type="search" enterkeyhint="search"
+               placeholder="Throw pillow, shower curtain…" aria-label="Search products">
+      </form>
+      <ul class="list" id="find-list"></ul>
+    </section>
+
+    <!-- Route -->
+    <section id="view-route" class="view" hidden>
+      <header class="head">
+        <div>
+          <h1 id="route-big">Nothing to put back</h1>
+          <p class="sub" id="route-sub">Scan a cart first</p>
+        </div>
+      </header>
+      <div class="segs" id="segs"></div>
+      <div class="card next" id="next" hidden>
+        <div class="next-top">
+          <span class="label">Up next</span>
+          <span class="loc" id="next-loc"></span>
+        </div>
+        <div class="next-body">
+          <img class="thumb big" id="next-photo" alt="" hidden>
+          <ul class="next-items" id="next-items"></ul>
+        </div>
+        <button class="go" id="shelved">Shelved it</button>
+        <button class="link" id="skip">Skip for now</button>
+      </div>
+      <ul class="list stops" id="stops"></ul>
+    </section>
+
+    <!-- Items -->
+    <section id="view-items" class="view" hidden>
+      <header class="head">
+        <div>
+          <h1>Known items</h1>
+          <p class="sub" id="items-sub"></p>
+        </div>
+      </header>
+      <input id="search" class="search" type="search" placeholder="Search name, barcode or aisle" aria-label="Search items">
+      <ul class="list" id="items-list"></ul>
+
+      <details class="settings" id="kroger-setup">
+        <summary>Kroger setup</summary>
+        <p class="hint" id="kroger-status"></p>
+
+        <p class="lb">Your API keys</p>
+        <p class="hint" id="keys-saved" hidden>Keys saved. <button class="link inline" id="keys-replace" type="button">Replace them</button></p>
+        <div id="keys-form">
+          <p class="hint">Free at developer.kroger.com: register an app (Production, Products API). They stay on your computer and never show here again.</p>
+          <input id="k-id" class="field" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Client ID" aria-label="Client ID">
+          <input id="k-secret" class="field" type="password" autocomplete="off" placeholder="Client Secret" aria-label="Client Secret">
+          <button class="pill-btn" id="keys-save" type="button">Save keys</button>
+        </div>
+
+        <p class="lb">Your store</p>
+        <div class="range">
+          <input id="k-zip" class="zip" inputmode="numeric" maxlength="5" placeholder="ZIP" aria-label="ZIP code">
+          <button class="pill-btn" id="k-find" type="button">Find stores</button>
+        </div>
+        <ul class="list stores" id="k-stores"></ul>
+        <p class="error" id="kroger-error"></p>
+      </details>
+
+      <details class="settings">
+        <summary>Aisles and walls</summary>
+        <p class="lb">Your aisles</p>
+        <div class="range">
+          <input id="home-from" inputmode="numeric" aria-label="First aisle"> <span>to</span>
+          <input id="home-to" inputmode="numeric" aria-label="Last aisle">
+        </div>
+        <p class="hint">Anything Kroger puts outside these numbers is not your problem.</p>
+        <p class="lb">Walls and named spots</p>
+        <p class="hint">One per line, in the order you walk them. Numbered aisles sort on their own.</p>
+        <textarea id="zones" rows="10" spellcheck="false"></textarea>
+        <p class="error" id="zones-error"></p>
+        <button class="pill-btn" id="save-zones">Save order</button>
+      </details>
+    </section>
+  </main>
+
+  <nav class="nav" aria-label="Sections">
+    <button data-view="scan" class="on" aria-label="Scan">Scan</button>
+    <button data-view="find" aria-label="Find">Find</button>
+    <button data-view="route" aria-label="Route">Route</button>
+    <button data-view="items" aria-label="Items">Items</button>
+  </nav>
+
+  <!-- Location sheet -->
+  <div class="scrim" id="scrim" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <div class="grab"></div>
+      <h2 id="sheet-title">Where's this live?</h2>
+      <p class="sub mono" id="sheet-code"></p>
+      <label class="lb" for="sheet-name">What is it?</label>
+      <input id="sheet-name" placeholder="Throw pillow, blue" maxlength="200">
+      <button type="button" class="notmine" id="sheet-notmine" aria-pressed="false">Not my department</button>
+      <label class="lb" for="sheet-note">Where does it go? <span class="opt">Note, if there's no aisle</span></label>
+      <textarea id="sheet-note" rows="2" maxlength="200" placeholder="Deli cooler"></textarea>
+      <label class="lb" for="sheet-found">Where'd you find it? <span class="opt">Optional</span></label>
+      <input id="sheet-found" maxlength="120" placeholder="Bath aisle, bottom shelf">
+      <div id="kroger-wrap" hidden>
+        <p class="lb">Kroger says</p>
+        <div class="pills kroger" id="kroger-spots"></div>
+      </div>
+      <p class="lb">Aisle or wall</p>
+      <div class="pills" id="pick-zone"></div>
+      <p class="lb">Side</p>
+      <div class="pills" id="pick-side"></div>
+      <p class="lb">Bay</p>
+      <div class="pills" id="pick-bay"></div>
+      <p class="error" id="sheet-error"></p>
+      <button class="go" id="sheet-save">Save it</button>
+      <div class="sheet-foot">
+        <button class="link" id="sheet-cancel">Cancel</button>
+        <button class="link danger" id="sheet-delete" hidden>Forget this item</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Shown when a scanned item belongs to another department -->
+  <div class="nope" id="nope" role="alert" hidden>
+    <div class="nope-sign">
+      <div class="nope-icon" aria-hidden="true">⚠</div>
+      <div class="nope-big">NOT YOUR<br>FUCKING<br>PROBLEM</div>
+      <div class="nope-item" id="nope-item"></div>
+      <div class="nope-where" id="nope-where"></div>
+      <div class="nope-tap">Tap to dismiss</div>
+    </div>
+  </div>
+
+  <script src="/vendor/zxing-reader.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

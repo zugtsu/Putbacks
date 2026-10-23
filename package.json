@@ -1,0 +1,16 @@
+{
+  "name": "putback",
+  "version": "1.0.0",
+  "description": "Scan a go-back cart and get a sorted put-away route",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "zxing-wasm": "3.1.4"
+  },
+  "private": true
+}

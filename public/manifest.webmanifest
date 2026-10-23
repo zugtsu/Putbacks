@@ -1,0 +1,9 @@
+{
+  "name": "Putback",
+  "short_name": "Putback",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#534AB7",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
